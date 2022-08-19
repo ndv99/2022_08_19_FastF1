@@ -1,0 +1,8 @@
+pyvenv.cfg
+fastf1_cache/*
+!fastf1_cache/.gitkeep 
+bin
+include
+lib
+lib64
+share
