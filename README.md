@@ -1,5 +1,5 @@
 # 2022_08_19_FastF1
-FastF1 demo for Canoicool.
+FastF1 demo for Canonicool.
 
 To use:
 
