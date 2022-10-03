@@ -22,9 +22,9 @@ def suppress_stdout_stderr():
 fastf1.Cache.enable_cache("fastf1_cache")
 ff1_plotting.setup_mpl()
 
-def madness_in_germany():
+def lap_chart_generator(year: int, event: str, title: str):
     with suppress_stdout_stderr():
-        session = fastf1.get_session(2019, "Germany", "R")
+        session = fastf1.get_session(year, event, "R")
         session.load()
     
     drivers = pandas.unique(session.laps['Driver'])
@@ -34,7 +34,12 @@ def madness_in_germany():
 
     for driver in drivers:
         results[driver] = session.get_driver(driver)['Position']
-        grid[driver] = session.get_driver(driver)['GridPosition']
+        gridpos = session.get_driver(driver)['GridPosition']
+        if gridpos == 0:
+            gridpos = 20
+        grid[driver] = gridpos
+    
+    print(grid)
 
     driver_positions = {}
 
@@ -85,8 +90,8 @@ def madness_in_germany():
     ax.set_xlabel("Lap number")
     ax.set_ylabel("Position")
     
-    ax.set_title("German Grand Prix 2019")
-    ax.legend()
+    ax.set_title(title)
+    ax.legend(title='Drivers',title_fontsize=15,loc='center left', bbox_to_anchor=(1, 0.5))
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
     plt.yticks(np.arange(1, 21, 1.0))
     plt.gca().invert_yaxis()
@@ -194,6 +199,9 @@ def menu_loop():
         print("1. Verstappen vs Leclerc in Imola Quali 3, 2022")
         print("2. The fastest ever F1 lap (Hamilton Monza Quali 3 2020)")
         print("3. Madness - 2019 German Grand Prix")
+        print("4. Max dominates Belgium 2022")
+        print("5. Fuckery at the 2022 Dutch GP")
+        print("6. Singapore 2022 Race")
         print("0. Exit")
         userinput = input("> ")
         if userinput == "1":
@@ -201,7 +209,13 @@ def menu_loop():
         elif userinput == "2":
             fastest_ever_lap()
         elif userinput == "3":
-            madness_in_germany()
+            lap_chart_generator(2019, "Germany", "2019 German Grand Prix")
+        elif userinput == "4":
+            lap_chart_generator(2022, "Belgium", "2022 Belgian Grand Prix")
+        elif userinput == "5":
+            lap_chart_generator(2022, "Netherlands", "2022 Dutch Grand Prix")
+        elif userinput == "6":
+            lap_chart_generator(2022, "Singapore", "2022 Singapore Grand Prix")
         elif userinput == "0":
             exited = True
         else:
